@@ -15,12 +15,12 @@ def get_usd_rate(ttl=3600):
     if _cache['rate'] and now - _cache['at'] < ttl:
         return _cache['rate']
     try:
-        req = urllib.request.Request(current_app.config['RATE_API_URL'],
-                                     headers={'User-Agent': 'FlaskShop/1.0'})
+        req = urllib.request.Request(current_app.config['RATE_API_URL'], headers={'User-Agent': 'FlaskShop/1.0'})
         with urllib.request.urlopen(req, timeout=5) as resp:
             data = json.loads(resp.read().decode('utf-8'))
         rate = float(data['rates']['VND'])
-    except (urllib.error.URLError, TimeoutError, ValueError, KeyError):
+    except (urllib.error.URLError, TimeoutError, ValueError, KeyError, TypeError) as e:
+        current_app.logger.warning('Không đọc được tỷ giá từ %s: %r', current_app.config['RATE_API_URL'], e)
         return _cache['rate']
     _cache.update(rate=rate, at=now)
     return rate
