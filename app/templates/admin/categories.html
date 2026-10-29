@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import csrf, field with context %}
+{% block title %}Danh mục{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Quản trị cửa hàng</h1>
+{% include 'admin/_nav.html' %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Danh mục</th>
+          <th class="text-end">Số sản phẩm</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>{% for c, n in rows %}
+        <tr>
+          <td>{{ c.name }}</td>
+          <td class="text-end">{{ n }}</td>
+          <td class="text-end">
+            <form method="post" action="{{ url_for('admin.category_delete', id=c.id) }}"
+              onsubmit="return confirm('Xoá danh mục này?')">{{ csrf() }}
+              <button class="btn btn-sm btn-outline-danger" {{ 'disabled' if n }}>Xoá</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}<tr>
+          <td colspan="3" class="text-muted">Chưa có danh mục.</td>
+        </tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-lg-5">
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}{{ field(form.name) }}{{ form.submit(class='btn btn-primary') }}
+    </form>
+  </div>
+</div>
+{% endblock %}

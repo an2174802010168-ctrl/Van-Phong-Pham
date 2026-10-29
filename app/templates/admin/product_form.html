@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import field, thumb with context %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Quản trị cửa hàng</h1>
+{% include 'admin/_nav.html' %}
+<div class="row">
+  <div class="col-lg-7">
+    <h2 class="h5 mb-3">{{ title }}</h2>
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {{ form.hidden_tag() }}
+      {{ field(form.name) }}{{ field(form.category) }}
+      <div class="row">
+        <div class="col">{{ field(form.price) }}</div>
+        <div class="col">{{ field(form.stock) }}</div>
+      </div>
+      {{ field(form.description) }}
+      {% if product and product.image_url %}
+      <div class="mb-2" style="width:120px">{{ thumb(product, 'rounded border') }}</div>
+      {% endif %}
+      {{ field(form.image) }}
+      {{ field(form.is_active) }}
+      {{ form.submit(class='btn btn-primary') }}
+      <a href="{{ url_for('admin.products') }}" class="btn btn-link">Huỷ</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

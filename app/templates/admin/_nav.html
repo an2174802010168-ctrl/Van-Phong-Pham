@@ -1,0 +1,11 @@
+<ul class="nav nav-pills mb-4">
+  {% set ep = request.endpoint %}
+  <li class="nav-item"><a class="nav-link {{ 'active' if ep == 'admin.dashboard' }}"
+      href="{{ url_for('admin.dashboard') }}">Tổng quan</a></li>
+  <li class="nav-item"><a class="nav-link {{ 'active' if ep.startswith('admin.product') }}"
+      href="{{ url_for('admin.products') }}">Sản phẩm</a></li>
+  <li class="nav-item"><a class="nav-link {{ 'active' if ep.startswith('admin.categor') }}"
+      href="{{ url_for('admin.categories') }}">Danh mục</a></li>
+  <li class="nav-item"><a class="nav-link {{ 'active' if ep.startswith('admin.order') }}"
+      href="{{ url_for('admin.orders') }}">Đơn hàng</a></li>
+</ul>

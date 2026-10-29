@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import product_card, pager with context %}
+{% block title %}Cửa hàng{% endblock %}
+{% block content %}
+<div class="row">
+  <aside class="col-lg-3 mb-4">
+    <div class="list-group">
+      <a class="list-group-item list-group-item-action {{ 'active' if not category_id }}"
+         href="{{ url_for('main.index', q=q or None, sort=sort) }}">Tất cả sản phẩm</a>
+      {% for c in categories %}
+        <a class="list-group-item list-group-item-action {{ 'active' if category_id == c.id }}"
+           href="{{ url_for('main.index', category=c.id, q=q or None, sort=sort) }}">{{ c.name }}</a>
+      {% endfor %}
+    </div>
+  </aside>
+  <section class="col-lg-9">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+      <div class="text-muted">
+        {% if q %}Kết quả cho “<strong>{{ q }}</strong>” · {% endif %}{{ pagination.total }} sản phẩm
+      </div>
+      <form method="get" class="d-flex align-items-center gap-2">
+        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+        {% if category_id %}<input type="hidden" name="category" value="{{ category_id }}">{% endif %}
+        <label class="small text-muted" for="sort">Sắp xếp</label>
+        <select id="sort" name="sort" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+          {% for key, (_, label) in sorts.items() %}
+            <option value="{{ key }}" {{ 'selected' if key == sort }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+    {% if products %}
+      <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3">
+        {% for p in products %}{{ product_card(p) }}{% endfor %}
+      </div>
+      {{ pager(pagination, 'main.index') }}
+    {% else %}
+      <div class="text-center text-muted py-5">Không tìm thấy sản phẩm nào phù hợp.</div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

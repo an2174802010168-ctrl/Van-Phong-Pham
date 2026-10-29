@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import csrf, thumb, pager with context %}
+{% block title %}Quản lý sản phẩm{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Quản trị cửa hàng</h1>
+{% include 'admin/_nav.html' %}
+<div class="d-flex justify-content-between mb-3 gap-2">
+  <form class="d-flex gap-2" method="get">
+    <input class="form-control" name="q" value="{{ q }}" placeholder="Tìm theo tên…">
+    <button class="btn btn-outline-secondary">Tìm</button>
+  </form>
+  <a class="btn btn-primary text-nowrap" href="{{ url_for('admin.product_new') }}">+ Thêm sản phẩm</a>
+</div>
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th style="width:64px"></th>
+        <th>Tên</th>
+        <th>Danh mục</th>
+        <th class="text-end">Giá</th>
+        <th class="text-end">Kho</th>
+        <th>Hiển thị</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>{% for p in products %}
+      <tr>
+        <td>
+          <div style="width:48px">{{ thumb(p, 'rounded') }}</div>
+        </td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.category.name if p.category else '—' }}</td>
+        <td class="text-end">{{ p.price|vnd }}</td>
+        <td class="text-end {{ 'text-danger fw-bold' if p.stock <= 5 }}">{{ p.stock }}</td>
+        <td>{{ '✅' if p.is_active else '🚫' }}</td>
+        <td class="text-end text-nowrap">
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.product_edit', id=p.id) }}">Sửa</a>
+          <form class="d-inline" method="post" action="{{ url_for('admin.product_delete', id=p.id) }}"
+            onsubmit="return confirm('Xoá sản phẩm &quot;{{ p.name|e }}&quot;?')">
+            {{ csrf() }}<button class="btn btn-sm btn-outline-danger">Xoá</button></form>
+        </td>
+      </tr>
+      {% else %}<tr>
+        <td colspan="7" class="text-center text-muted py-4">Chưa có sản phẩm.</td>
+      </tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ pager(pagination, 'admin.products') }}
+{% endblock %}

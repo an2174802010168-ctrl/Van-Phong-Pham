@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Lỗi 413{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+  <div class="display-1 fw-bold text-muted">413</div>
+  <p class="fs-5">Tệp tải lên quá lớn (tối đa 2 MB).</p>
+  <a href="{{ url_for('main.index') }}" class="btn btn-primary">Về trang chủ</a>
+</div>
+{% endblock %}

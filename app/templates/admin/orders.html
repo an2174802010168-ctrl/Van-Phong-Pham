@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, pager with context %}
+{% block title %}Quản lý đơn hàng{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Quản trị cửa hàng</h1>
+{% include 'admin/_nav.html' %}
+<div class="mb-3 d-flex flex-wrap gap-2">
+  <a class="btn btn-sm {{ 'btn-dark' if not status else 'btn-outline-dark' }}" href="{{ url_for('admin.orders') }}">Tất
+    cả</a>
+  {% for key, (label, _) in statuses.items() %}
+  <a class="btn btn-sm {{ 'btn-dark' if status == key else 'btn-outline-dark' }}"
+    href="{{ url_for('admin.orders', status=key) }}">{{ label }}</a>
+  {% endfor %}
+</div>
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Mã</th>
+        <th>Khách</th>
+        <th>Điện thoại</th>
+        <th>Ngày đặt</th>
+        <th>Trạng thái</th>
+        <th class="text-end">Tổng</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>{% for o in orders %}
+      <tr>
+        <td>#{{ o.id }}</td>
+        <td>{{ o.full_name }}</td>
+        <td>{{ o.phone }}</td>
+        <td>{{ o.created_at|localtime }}</td>
+        <td>{{ status_badge(o) }}</td>
+        <td class="text-end">{{ o.total|vnd }}</td>
+        <td class="text-end"><a class="btn btn-sm btn-outline-primary"
+            href="{{ url_for('admin.order_detail', id=o.id) }}">Chi tiết</a></td>
+      </tr>
+      {% else %}<tr>
+        <td colspan="7" class="text-center text-muted py-4">Không có đơn hàng.</td>
+      </tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ pager(pagination, 'admin.orders') }}
+{% endblock %}

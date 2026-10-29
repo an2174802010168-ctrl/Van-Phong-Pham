@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge with context %}
+{% block title %}Quản trị{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Quản trị cửa hàng</h1>
+{% include 'admin/_nav.html' %}
+<div class="row g-3 mb-4">
+  {% for label, val in [('Doanh thu (trừ đơn huỷ)', stats.revenue|vnd), ('Tổng đơn hàng', stats.orders),
+  ('Đơn chờ xác nhận', stats.pending), ('Sản phẩm', stats.products), ('Khách hàng', stats.users)] %}
+  <div class="col-6 col-lg">
+    <div class="card text-center h-100">
+      <div class="card-body">
+        <div class="text-muted small">{{ label }}</div>
+        <div class="fs-4 fw-bold">{{ val }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <h2 class="h5">Đơn hàng gần đây</h2>
+    <table class="table table-sm align-middle">
+      <tbody>{% for o in recent %}
+        <tr>
+          <td><a href="{{ url_for('admin.order_detail', id=o.id) }}">#{{ o.id }}</a></td>
+          <td>{{ o.full_name }}</td>
+          <td>{{ status_badge(o) }}</td>
+          <td class="text-end">{{ o.total|vnd }}</td>
+        </tr>
+        {% else %}<tr>
+          <td class="text-muted">Chưa có đơn hàng.</td>
+        </tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-lg-5">
+    <h2 class="h5">Sắp hết hàng (≤ 5)</h2>
+    <ul class="list-group">{% for p in low_stock %}
+      <li class="list-group-item d-flex justify-content-between">
+        <a href="{{ url_for('admin.product_edit', id=p.id) }}">{{ p.name }}</a>
+        <span class="badge text-bg-{{ 'danger' if p.stock == 0 else 'warning' }}">{{ p.stock }}</span>
+      </li>
+      {% else %}<li class="list-group-item text-muted">Tồn kho ổn định.</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

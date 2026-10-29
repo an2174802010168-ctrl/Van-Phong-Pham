@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import csrf, thumb with context %}
+{% block title %}Giỏ hàng{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Giỏ hàng</h1>
+{% if lines %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    {% for l in lines %}
+    <div class="card mb-3"><div class="card-body">
+      <div class="row align-items-center g-3">
+        <div class="col-3 col-md-2">{{ thumb(l.product, 'rounded') }}</div>
+        <div class="col-9 col-md-4">
+          <a class="fw-semibold text-dark text-decoration-none" href="{{ url_for('main.product', id=l.product.id) }}">{{ l.product.name }}</a>
+          <div class="text-muted small">{{ l.product.price|vnd }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <form method="post" action="{{ url_for('cart.update', product_id=l.product.id) }}" class="d-flex gap-1">
+            {{ csrf() }}
+            <input type="number" name="quantity" value="{{ l.quantity }}" min="0" max="{{ l.product.stock }}" class="form-control form-control-sm" style="width:80px">
+            <button class="btn btn-outline-secondary btn-sm">Cập nhật</button>
+          </form>
+        </div>
+        <div class="col-4 col-md-2 text-end fw-semibold">{{ l.subtotal|vnd }}</div>
+        <div class="col-2 col-md-1 text-end">
+          <form method="post" action="{{ url_for('cart.remove', product_id=l.product.id) }}">
+            {{ csrf() }}<button class="btn btn-sm btn-outline-danger" title="Xoá">✕</button>
+          </form>
+        </div>
+      </div>
+    </div></div>
+    {% endfor %}
+  </div>
+  <div class="col-lg-4">
+    <div class="card"><div class="card-body">
+      <h2 class="h5">Tóm tắt đơn hàng</h2>
+      <div class="d-flex justify-content-between"><span>Tạm tính</span><span>{{ subtotal|vnd }}</span></div>
+      <div class="d-flex justify-content-between"><span>Phí vận chuyển</span><span>{{ fee|vnd if fee else 'Miễn phí' }}</span></div>
+      {% if fee %}<div class="small text-muted">Miễn phí vận chuyển cho đơn từ {{ config.FREE_SHIPPING_FROM|vnd }}.</div>{% endif %}
+      <hr>
+      <div class="d-flex justify-content-between fw-bold fs-5"><span>Tổng cộng</span><span class="price">{{ total|vnd }}</span></div>
+      <a href="{{ url_for('orders.checkout') }}" class="btn btn-primary w-100 mt-3">Tiến hành đặt hàng</a>
+      <a href="{{ url_for('main.index') }}" class="btn btn-link w-100">← Tiếp tục mua sắm</a>
+    </div></div>
+  </div>
+</div>
+{% else %}
+  <div class="text-center py-5">
+    <p class="text-muted fs-5">Giỏ hàng của bạn đang trống.</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Bắt đầu mua sắm</a>
+  </div>
+{% endif %}
+{% endblock %}

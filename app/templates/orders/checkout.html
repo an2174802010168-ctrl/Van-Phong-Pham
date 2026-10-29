@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import field with context %}
+{% block title %}Đặt hàng{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Thông tin giao hàng</h1>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ field(form.full_name) }}{{ field(form.phone) }}{{ field(form.address) }}{{ field(form.note) }}
+      <div class="alert alert-secondary">💵 Phương thức thanh toán: <strong>Thanh toán khi nhận hàng (COD)</strong></div>
+      {{ form.submit(class='btn btn-primary btn-lg') }}
+      <a href="{{ url_for('cart.view') }}" class="btn btn-link">← Quay lại giỏ hàng</a>
+    </form>
+  </div>
+  <div class="col-lg-5">
+    <div class="card"><div class="card-body">
+      <h2 class="h5">Đơn hàng của bạn</h2>
+      {% for l in lines %}
+        <div class="d-flex justify-content-between small py-1">
+          <span>{{ l.product.name }} × {{ l.quantity }}</span><span>{{ l.subtotal|vnd }}</span></div>
+      {% endfor %}
+      <hr>
+      <div class="d-flex justify-content-between"><span>Tạm tính</span><span>{{ subtotal|vnd }}</span></div>
+      <div class="d-flex justify-content-between"><span>Phí vận chuyển</span><span>{{ fee|vnd if fee else 'Miễn phí' }}</span></div>
+      <div class="d-flex justify-content-between fw-bold fs-5 mt-2"><span>Tổng cộng</span><span class="price">{{ total|vnd }}</span></div>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import csrf, thumb, product_card with context %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Cửa hàng</a></li>
+    {% if product.category %}<li class="breadcrumb-item"><a
+        href="{{ url_for('main.index', category=product.category.id) }}">{{ product.category.name }}</a></li>{% endif %}
+    <li class="breadcrumb-item active">{{ product.name }}</li>
+  </ol>
+</nav>
+<div class="row g-4">
+  <div class="col-md-5">{{ thumb(product, 'rounded border') }}</div>
+  <div class="col-md-7">
+    <h1 class="h3">{{ product.name }}</h1>
+    {% if not product.is_active %}<span class="badge text-bg-secondary">Đang ẩn</span>{% endif %}
+    <div class="price fs-3 my-3">{{ product.price|vnd }}</div>
+    {% if usd_rate %}<div class="text-muted small mb-2">≈ {{ '%.2f'|format(product.price / usd_rate) }} USD (1 USD = {{ '{:,.0f}'.format(usd_rate).replace(',', '.') }} ₫)</div>{% endif %}
+    <p class="text-muted">{{ product.description }}</p>
+    <p>
+      {% if product.in_stock %}
+      <span class="badge text-bg-success">Còn hàng</span>
+      <span class="text-muted small">({{ product.stock }} sản phẩm)</span>
+      {% else %}<span class="badge text-bg-danger">Hết hàng</span>{% endif %}
+    </p>
+    {% if product.in_stock and product.is_active %}
+    <form method="post" action="{{ url_for('cart.add', product_id=product.id) }}" class="d-flex gap-2"
+      style="max-width:320px">
+      {{ csrf() }}
+      <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control"
+        style="width:90px">
+      <button class="btn btn-primary flex-grow-1">Thêm vào giỏ</button>
+    </form>
+    {% endif %}
+    {% if current_user.is_authenticated and current_user.is_admin %}
+    <a class="btn btn-link px-0 mt-2" href="{{ url_for('admin.product_edit', id=product.id) }}">✏️ Sửa sản phẩm</a>
+    {% endif %}
+  </div>
+</div>
+{% if related %}
+<h2 class="h5 mt-5 mb-3">Sản phẩm cùng danh mục</h2>
+<div class="row row-cols-2 row-cols-md-4 g-3">{% for p in related %}{{ product_card(p) }}{% endfor %}</div>
+{% endif %}
+{% endblock %}

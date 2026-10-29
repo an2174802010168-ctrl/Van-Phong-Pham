@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, order_items, field with context %}
+{% block title %}Đơn #{{ order.id }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Quản trị cửa hàng</h1>
+{% include 'admin/_nav.html' %}
+<h2 class="h5 mb-3">Đơn hàng #{{ order.id }} {{ status_badge(order) }}</h2>
+<div class="row g-4">
+  <div class="col-lg-8">{{ order_items(order) }}</div>
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h3 class="h6">Khách hàng</h3>
+        <div>{{ order.full_name }} <span class="text-muted">({{ order.user.email }})</span></div>
+        <div>{{ order.phone }}</div>
+        <div>{{ order.address }}</div>
+        {% if order.note %}<div class="text-muted small mt-2">Ghi chú: {{ order.note }}</div>{% endif %}
+        <div class="small text-muted mt-2">Đặt lúc {{ order.created_at|localtime }}</div>
+      </div>
+    </div>
+    {% if order.status != 'cancelled' %}
+    <div class="card">
+      <div class="card-body">
+        <form method="post">{{ form.hidden_tag() }}{{ field(form.status) }}{{ form.submit(class='btn btn-primary
+          btn-sm') }}</form>
+        <div class="small text-muted mt-2">Chọn “Đã huỷ” sẽ hoàn lại tồn kho.</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<a href="{{ url_for('admin.orders') }}" class="btn btn-link mt-2">← Danh sách đơn</a>
+{% endblock %}

@@ -1,0 +1,10 @@
+.price { color: #d63384; font-weight: 700; }
+.thumb { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.thumb-ph {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem; font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, #6f86d6, #48c6ef);
+}
+.product-card { transition: transform .15s, box-shadow .15s; }
+.product-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.12); }
+.product-card .card-title { min-height: 2.4em; }

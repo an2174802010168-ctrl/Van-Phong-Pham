@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, pager with context %}
+{% block title %}Đơn hàng của tôi{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Đơn hàng của tôi</h1>
+{% if orders %}
+<div class="table-responsive"><table class="table table-hover align-middle">
+  <thead><tr><th>Mã đơn</th><th>Ngày đặt</th><th>Trạng thái</th><th class="text-end">Tổng tiền</th><th></th></tr></thead>
+  <tbody>{% for o in orders %}
+    <tr><td>#{{ o.id }}</td><td>{{ o.created_at|localtime }}</td><td>{{ status_badge(o) }}</td>
+        <td class="text-end">{{ o.total|vnd }}</td>
+        <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{{ url_for('orders.detail', id=o.id) }}">Xem</a></td></tr>
+  {% endfor %}</tbody>
+</table></div>
+{{ pager(pagination, 'orders.history') }}
+{% else %}
+  <p class="text-muted">Bạn chưa có đơn hàng nào. <a href="{{ url_for('main.index') }}">Mua sắm ngay</a></p>
+{% endif %}
+{% endblock %}
