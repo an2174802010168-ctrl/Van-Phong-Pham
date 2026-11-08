@@ -1,0 +1,25 @@
+{# Danh sách sản phẩm (dict do routes.card() tạo) + điểm số; dùng trong search.html #}
+{% for p in items %}
+<div class="card mb-2">
+  <div class="card-body py-2 d-flex gap-3 align-items-center">
+    {% if p.image %}<img src="{{ p.image }}" alt="" width="64" height="64" style="object-fit:cover" class="rounded" onerror="this.style.display='none'">{% endif %}
+    <div class="flex-grow-1">
+      <a href="{{ p.url }}" class="fw-semibold">{{ p.name }}</a>
+      {% if p.category %}<span class="badge text-bg-light border ms-1">{{ p.category }}</span>{% endif %}
+      <div>{{ p.price_text }}
+        {% if p.in_stock %}<span class="text-success small">· Còn hàng</span>
+        {% else %}<span class="text-danger small">· Hết hàng</span>{% endif %}</div>
+      {% if p.description %}<div class="small text-body-secondary">{{ p.description }}</div>{% endif %}
+    </div>
+    {% if p.score is defined %}
+    <div class="text-end">
+      <span class="badge text-bg-primary" title="Điểm xếp hạng">{{ '%.2f' % p.score }}</span><br>
+      <span class="badge text-bg-light border" title="cosine">cos {{ '%.2f' % p.semantic }}</span>
+      <span class="badge text-bg-light border" title="khớp từ khóa">từ khóa {{ '%.2f' % p.keyword }}</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% else %}
+<p class="text-body-secondary">Không có sản phẩm phù hợp.</p>
+{% endfor %}

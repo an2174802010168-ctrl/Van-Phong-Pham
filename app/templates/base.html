@@ -65,6 +65,7 @@
   <footer class="bg-light border-top py-3 mt-auto">
     <div class="container small text-muted text-center">© {{ shop_name }} · Hotline: 090 123 24 24</div>
   </footer>
+  {% if request.endpoint != 'ai.assistant' %}{% include 'ai/_chat_widget.html' %}{% endif %}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

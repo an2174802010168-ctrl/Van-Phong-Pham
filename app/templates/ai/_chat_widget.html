@@ -1,0 +1,39 @@
+{# Nút "Chat AI" nổi ở góc dưới phải + khung chat popup (không chuyển trang).
+   Không có JavaScript -> nút vẫn là liên kết bình thường tới trang trợ lý. #}
+<a class="ai-chat-launcher" id="ai-chat-launcher" href="{{ url_for('ai.assistant') }}"
+   aria-label="Mở trợ lý AI" title="Chat với trợ lý AI">
+  <svg class="ai-chat-launcher__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"
+          stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="m12.2 6.8.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8.8-2.1Z" fill="currentColor" />
+    <path d="m17.3 13.2.4 1 .9.4-1 .4-.3 1-.4-1-1-.4 1-.4.4-1Z" fill="currentColor" />
+  </svg>
+  <span>Chat AI</span>
+</a>
+
+<section class="ai-chat-panel" id="ai-chat-panel" role="dialog" aria-label="Trợ lý mua sắm AI" hidden
+         data-stream-url="{{ url_for('ai.assistant_stream') }}"
+         data-page-url="{{ url_for('ai.assistant') }}"
+         data-max-chars="{{ config.get('AI_MAX_QUESTION_CHARS', 500) }}">
+  <header class="ai-chat-panel__head">
+    <div class="ai-chat-panel__title">
+      <strong>Trợ lý mua sắm</strong>
+      <small>Hỏi về sản phẩm, đặt hàng, thanh toán</small>
+    </div>
+    <button type="button" class="ai-chat-panel__btn" id="ai-chat-clear" title="Xóa cuộc trò chuyện"
+            aria-label="Xóa cuộc trò chuyện">🗑</button>
+    <a class="ai-chat-panel__btn" href="{{ url_for('ai.assistant') }}" title="Mở trang đầy đủ"
+       aria-label="Mở trang trợ lý đầy đủ">↗</a>
+    <button type="button" class="ai-chat-panel__btn" id="ai-chat-close" title="Đóng (Esc)"
+            aria-label="Đóng khung chat">✕</button>
+  </header>
+
+  <div class="ai-chat-panel__log" id="ai-chat-log" role="log" aria-live="polite" tabindex="0"></div>
+
+  <form class="ai-chat-panel__form" id="ai-chat-form" autocomplete="off">
+    <input type="text" id="ai-chat-input" class="form-control" maxlength="{{ config.get('AI_MAX_QUESTION_CHARS', 500) }}"
+           placeholder="Nhập câu hỏi…" aria-label="Câu hỏi cho trợ lý" required>
+    <button type="submit" class="btn btn-primary" id="ai-chat-send">Gửi</button>
+  </form>
+</section>
+<script src="{{ url_for('static', filename='js/ai-chat.js') }}" defer></script>

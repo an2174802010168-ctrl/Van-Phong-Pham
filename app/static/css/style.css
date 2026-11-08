@@ -8,3 +8,113 @@
 .product-card { transition: transform .15s, box-shadow .15s; }
 .product-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.12); }
 .product-card .card-title { min-height: 2.4em; }
+
+.ai-chat-launcher {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1030;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .8rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6f5cff, #3b82f6);
+  box-shadow: 0 .5rem 1.5rem rgba(59, 75, 190, .35);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.ai-chat-launcher:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 .7rem 1.8rem rgba(59, 75, 190, .45);
+  color: #fff;
+}
+.ai-chat-launcher:focus-visible {
+  outline: 3px solid #b9c5ff;
+  outline-offset: 3px;
+}
+.ai-chat-launcher__icon { width: 1.5rem; height: 1.5rem; }
+
+@media (max-width: 575.98px) {
+  .ai-chat-launcher {
+    right: 1rem;
+    bottom: 1rem;
+    padding: .85rem;
+  }
+  .ai-chat-launcher span { display: none; }
+}
+
+/* ---------- Khung chat AI nổi (mở từ nút .ai-chat-launcher) ---------- */
+.ai-chat-launcher { cursor: pointer; }
+.ai-chat-panel {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 5.5rem;
+  z-index: 1031;
+  display: flex;
+  flex-direction: column;
+  width: 24rem;
+  max-width: calc(100vw - 2rem);
+  height: 32rem;
+  max-height: calc(100vh - 7.5rem);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, .28);
+  overflow: hidden;
+}
+.ai-chat-panel[hidden] { display: none; }
+.ai-chat-panel__head {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .7rem .8rem;
+  background: linear-gradient(135deg, #6f5cff, #3b82f6);
+  color: #fff;
+}
+.ai-chat-panel__title { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; }
+.ai-chat-panel__title small { opacity: .85; font-size: .75rem; }
+.ai-chat-panel__btn {
+  border: 0; background: transparent; color: #fff; cursor: pointer;
+  width: 2rem; height: 2rem; border-radius: .5rem; font-size: 1rem;
+  display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
+}
+.ai-chat-panel__btn:hover { background: rgba(255, 255, 255, .2); color: #fff; }
+.ai-chat-panel__btn:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.ai-chat-panel__log {
+  flex: 1; overflow-y: auto; padding: .8rem; display: flex; flex-direction: column; gap: .6rem;
+  background: var(--bs-tertiary-bg);
+}
+.ai-msg { max-width: 88%; display: flex; flex-direction: column; gap: .25rem; }
+.ai-msg--user { align-self: flex-end; }
+.ai-msg--bot { align-self: flex-start; }
+.ai-msg__body {
+  padding: .5rem .75rem; border-radius: .9rem; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .92rem;
+}
+.ai-msg--user .ai-msg__body { background: #3b82f6; color: #fff; border-bottom-right-radius: .25rem; }
+.ai-msg--bot .ai-msg__body {
+  background: var(--bs-body-bg); border: 1px solid var(--bs-border-color); border-bottom-left-radius: .25rem;
+}
+.ai-msg--error .ai-msg__body { border-color: var(--bs-danger); color: var(--bs-danger); }
+.ai-msg__body.is-typing:empty::after { content: '● ● ●'; letter-spacing: .15em; opacity: .5; animation: ai-blink 1s infinite; }
+@keyframes ai-blink { 50% { opacity: .15; } }
+.ai-msg__src { font-size: .75rem; color: var(--bs-secondary-color); padding: 0 .25rem; }
+.ai-chips { display: flex; flex-direction: column; gap: .35rem; margin-top: .25rem; }
+.ai-chip {
+  text-align: left; border: 1px solid var(--bs-primary); background: transparent; color: var(--bs-primary);
+  border-radius: 999px; padding: .3rem .75rem; font-size: .85rem; cursor: pointer;
+}
+.ai-chip:hover { background: var(--bs-primary); color: #fff; }
+.ai-chat-panel__form { display: flex; gap: .5rem; padding: .6rem; border-top: 1px solid var(--bs-border-color); background: var(--bs-body-bg); }
+.ai-chat-launcher.is-open { box-shadow: 0 .5rem 1.5rem rgba(59, 75, 190, .55); }
+
+@media (max-width: 575.98px) {
+  .ai-chat-panel { right: 1rem; left: 1rem; width: auto; max-width: none; bottom: 4.75rem; height: 70vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-msg__body.is-typing:empty::after { animation: none; }
+}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Trợ lý mua sắm <small class="text-body-secondary fs-5">hỏi về sản phẩm, đặt hàng, thanh toán</small></h1>
+    {% include 'ai/_ai_header.html' %}
+    <form method="get" action="{{ url_for('ai.assistant') }}" class="mb-2">
+        <textarea id="question" name="q" rows="2" maxlength="500" class="form-control mb-2"
+                  placeholder="Ví dụ: Có tai nghe nào dưới 500k không? / Thanh toán thế nào?" required>{{ q }}</textarea>
+        <button class="btn btn-primary">Hỏi trợ lý</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="askStream()">Trả lời dạng stream (SSE)</button>
+    </form>
+
+    {% if result %}
+    <div class="card my-3 {% if result.refused %}border-danger{% else %}border-success{% endif %}" id="ai-answer">
+      <div class="card-header"><strong>Hỏi:</strong> {{ result.question }}</div>
+      <div class="card-body">
+        {% if result.blocked %}
+        <div class="alert alert-warning py-1">Đã loại {{ result.blocked }} đoạn ngữ cảnh nghi chứa prompt injection.</div>
+        {% endif %}
+        <div style="white-space: pre-wrap">{{ result.answer | cite_links(result.citations) }}</div>
+        {% if result.citations %}
+        <hr><div class="small"><strong>Nguồn:</strong>
+          <ol class="mb-0">
+          {% for c in result.citations %}
+            <li><a href="{{ c.url }}">{{ c.label }}</a> <span class="text-body-secondary">(điểm {{ c.score }})</span></li>
+          {% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    <div id="stream-box" class="card my-3 d-none"><div class="card-body">
+        <div id="stream-text" style="white-space: pre-wrap"></div>
+        <div id="stream-src" class="small text-body-secondary mt-2"></div>
+    </div></div>
+
+    {% if history %}
+    <h6 class="mt-4">Lịch sử gần đây (gửi kèm cho LLM)</h6>
+    <ul class="small text-body-secondary">
+      {% for turn in history %}<li><strong>{{ turn.q }}</strong> – {{ turn.a[:120] }}…</li>{% endfor %}
+    </ul>
+    <a class="btn btn-link btn-sm p-0" href="{{ url_for('ai.assistant_clear') }}">Xóa lịch sử</a>
+    {% endif %}
+
+    <script>
+      // Stream: EventSource nhận lần lượt 'meta' (nguồn), các delta (chữ) và 'done'
+      function askStream() {
+        const q = document.getElementById('question').value.trim();
+        if (!q) return;
+        document.getElementById('stream-box').classList.remove('d-none');
+        const text = document.getElementById('stream-text');
+        const src = document.getElementById('stream-src');
+        text.textContent = ''; src.textContent = '';
+        const es = new EventSource('{{ url_for('ai.assistant_stream') }}?q=' + encodeURIComponent(q));
+        es.addEventListener('meta', e => {
+          const m = JSON.parse(e.data);
+          src.textContent = m.citations.map(c => '[' + c.n + '] ' + c.label).join('  ');
+        });
+        es.onmessage = e => { text.textContent += JSON.parse(e.data).delta; };
+        es.addEventListener('llm_error', e => { text.textContent += '\n' + JSON.parse(e.data).error; es.close(); });
+        es.onerror = () => es.close();  // không tự kết nối lại
+        es.addEventListener('done', e => {
+          if (JSON.parse(e.data).refused) src.textContent = '';  // bị từ chối -> không hiện nguồn
+          es.close();
+        });
+      }
+    </script>
+{% endblock %}

@@ -1,0 +1,5 @@
+{# Dòng thông tin cấu hình AI + nhãn "Chế độ demo" (để trung thực khi chạy offline) #}
+<p class="text-body-secondary small mb-3">
+    {% if ai_demo %}<span class="badge text-bg-warning me-1">Chế độ demo</span>{% endif %}
+    LLM: <code>{{ ai_llm }}</code> · Embedding: <code>{{ ai_embed }}</code>
+</p>

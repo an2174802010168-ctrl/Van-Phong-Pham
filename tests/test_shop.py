@@ -15,7 +15,7 @@ SHIP = dict(full_name='Nguyễn An', phone='0901234567', address='1 Lê Lợi, Q
 
 # ---------- Cửa hàng ----------
 def test_vnd_filter():
-    assert vnd(1234567) == '1.234.567 ₫'
+    assert vnd(1234567) == '1.234.567 VND'
     assert vnd(0) == '0 ₫'
 
 
@@ -253,3 +253,23 @@ def test_create_admin_rejects_unloginable_email_and_creates_valid_one(app):
     assert ok.exit_code == 0
     u = db.session.scalar(sa.select(User).where(User.email == 'boss@example.com'))
     assert u.is_admin and u.check_password('abcdef')
+
+
+# ---------- Nút chat AI nổi (không chuyển trang) ----------
+def test_floating_chat_widget_on_normal_pages(client):
+    html = client.get('/').get_data(as_text=True)
+    assert 'id="ai-chat-launcher"' in html and 'id="ai-chat-panel"' in html
+    assert 'js/ai-chat.js' in html
+
+
+def test_floating_chat_widget_hidden_on_assistant_page(client):
+    html = client.get('/ai/assistant').get_data(as_text=True)
+    assert 'id="ai-chat-panel"' not in html
+
+
+def test_chat_stream_endpoint_always_speaks_sse(client):
+    # Dù LLM sẵn sàng (200, 'done') hay chưa chạy (503, 'llm_error') thì widget đều đọc được
+    r = client.get('/ai/assistant/stream?q=Thanh toán thế nào?')
+    assert r.mimetype == 'text/event-stream'
+    body = r.get_data(as_text=True)
+    assert 'event: done' in body or 'event: llm_error' in body

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <h6>Tài liệu hướng dẫn</h6>
+            <div class="list-group small">
+            {% for stem, heading in docs %}
+                <a class="list-group-item list-group-item-action{% if stem == current %} active{% endif %}"
+                   href="{{ url_for('ai.doc', name=stem) }}">{{ heading }}</a>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-9">{{ html }}</div>
+    </div>
+{% endblock %}

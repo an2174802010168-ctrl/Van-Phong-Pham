@@ -16,7 +16,7 @@
     <h1 class="h3">{{ product.name }}</h1>
     {% if not product.is_active %}<span class="badge text-bg-secondary">Đang ẩn</span>{% endif %}
     <div class="price fs-3 my-3">{{ product.price|vnd }}</div>
-    {% if usd_rate %}<div class="text-muted small mb-2">≈ {{ '%.2f'|format(product.price / usd_rate) }} USD (1 USD = {{ '{:,.0f}'.format(usd_rate).replace(',', '.') }} ₫)</div>{% endif %}
+    {% if usd_rate %}<div class="text-muted small mb-2">≈ {{ '%.2f'|format(product.price / usd_rate) }} USD (1 USD = {{ '{:,.0f}'.format(usd_rate).replace(',', '.') }} VND)</div>{% endif %}
     <p class="text-muted">{{ product.description }}</p>
     <p>
       {% if product.in_stock %}

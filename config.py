@@ -7,7 +7,7 @@ RATE_API_URL = os.environ.get('RATE_API_URL') or 'https://open.er-api.com/v6/lat
 
 class Config:
     RATE_API_URL = RATE_API_URL
-    SHOP_NAME = 'Văn Phòng Phẩm'
+    SHOP_NAME = 'FlaskShop'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-hay-doi-khi-trien-khai'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')

@@ -17,8 +17,8 @@ VN_TZ = timezone(timedelta(hours=7))  # Việt Nam không dùng giờ mùa hè
 
 # ---------- Bộ lọc Jinja ----------
 def vnd(value):
-    """1234567 -> '1.234.567 ₫'"""
-    return f'{int(value or 0):,}'.replace(',', '.') + ' ₫'
+    """1234567 -> '1.234.567 VND'"""
+    return f'{int(value or 0):,}'.replace(',', '.') + ' VND'
 
 
 def localtime(dt, fmt='%d/%m/%Y %H:%M'):

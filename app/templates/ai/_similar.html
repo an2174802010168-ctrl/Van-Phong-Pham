@@ -1,0 +1,22 @@
+{# Nhúng vào trang chi tiết sản phẩm:  {% set product_id = product.id %}{% include 'ai/_similar.html' %}
+   Tải bằng JS từ /ai/api/products/<id>/similar nên không làm chậm trang chính. #}
+<div id="ai-similar" class="my-4" hidden>
+  <h5>Sản phẩm tương tự</h5>
+  <ul class="list-unstyled mb-0" id="ai-similar-list"></ul>
+</div>
+<script>
+  fetch('{{ url_for("ai.api_similar", id=product_id) }}')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d || !d.items.length) return;
+      const ul = document.getElementById('ai-similar-list');
+      d.items.forEach(p => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = p.url; a.textContent = p.name;
+        li.append(a, ' – ' + p.price_text);
+        ul.append(li);
+      });
+      document.getElementById('ai-similar').hidden = false;
+    }).catch(() => {});
+</script>

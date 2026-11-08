@@ -21,7 +21,7 @@
             <button class="btn btn-outline-secondary btn-sm">Cập nhật</button>
           </form>
         </div>
-        <div class="col-4 col-md-2 text-end fw-semibold">{{ l.subtotal|vnd }}</div>
+        <div class="col-4 col-md-2 text-end fw-semibold">{{ l.subtotal|VND }}</div>
         <div class="col-2 col-md-1 text-end">
           <form method="post" action="{{ url_for('cart.remove', product_id=l.product.id) }}">
             {{ csrf() }}<button class="btn btn-sm btn-outline-danger" title="Xoá">✕</button>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Tìm sản phẩm thông minh</h1>
+    {% include 'ai/_ai_header.html' %}
+    <form method="get" action="{{ url_for('ai.search') }}" class="row g-2 mb-2">
+        <div class="col-md-6"><input type="search" name="q" value="{{ q }}" class="form-control"
+             placeholder="Ví dụ: áo thoáng mát đi biển dưới 300k" required></div>
+        <div class="col-md-4">
+            <select name="mode" class="form-select">
+            {% for value, label in modes.items() %}
+                <option value="{{ value }}"{% if value == mode %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2"><button class="btn btn-primary w-100">Tìm</button></div>
+    </form>
+    <p class="small text-body-secondary">Gõ tự nhiên, có thể kèm điều kiện giá: "dưới 500k", "từ 1 triệu đến 3 triệu".</p>
+    {% set names = {'keyword': 'Từ khóa (khớp từ)', 'semantic': 'Ngữ nghĩa (cosine embedding)',
+                    'hybrid': 'Lai: α·cosine + (1−α)·từ khóa'} %}
+    {% if results %}
+    <div class="row">
+        {% for m, items in results.items() %}
+        <div class="col-md-{{ 12 // results|length }}">
+            <h5>{{ names[m] }} <span class="badge text-bg-secondary">{{ items|length }}</span></h5>
+            {% include 'ai/_cards.html' %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}
