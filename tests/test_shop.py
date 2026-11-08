@@ -16,7 +16,7 @@ SHIP = dict(full_name='Nguyễn An', phone='0901234567', address='1 Lê Lợi, Q
 # ---------- Cửa hàng ----------
 def test_vnd_filter():
     assert vnd(1234567) == '1.234.567 VND'
-    assert vnd(0) == '0 ₫'
+    assert vnd(0) == '0 VND'
 
 
 def test_catalog_hides_inactive_and_supports_search(client):
