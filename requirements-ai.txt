@@ -1,0 +1,6 @@
+# Thư viện thêm cho phần LLM + RAG (cài:  pip install -r requirements-ai.txt)
+numpy>=1.26
+requests>=2.31
+markdown-it-py>=3.0       # hiển thị tài liệu hướng dẫn /ai/docs
+python-dotenv>=1.0        # đọc .env (nếu config.py của bạn chưa dùng)
+wordllama==0.4.0.post1    # chỉ cần khi EMBED_PROVIDER=local (embedding offline, mặc định)

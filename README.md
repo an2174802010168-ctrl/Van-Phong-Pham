@@ -47,11 +47,11 @@ flask run                         # mở http://127.0.0.1:5000
 
 `flask seed` tạo các bảng cần thiết cho cài đặt mới. Với cơ sở dữ liệu hiện có trước khi thêm AI, chạy `flask db upgrade` để áp dụng migration tạo bảng vector `ai_chunk`.
 
-Chạy kiểm thử: `python -m pytest -q`
+Chạy kiểm thử cửa hàng: `python -m pytest -q`. Sau khi cài thư viện AI bên dưới, chạy thêm kiểm thử AI bằng `python -m pytest -q tests_ai.py`.
 
 ## Cấu hình và vận hành AI
 
-- Để bật các chức năng AI, cài thư viện bổ sung: `pip install numpy requests markdown-it-py wordllama==0.4.0.post1`. WordLlama dùng embedding cục bộ mặc định.
+- Để bật và kiểm thử các chức năng AI, cài thư viện bổ sung: `pip install -r requirements-ai.txt`. WordLlama dùng embedding cục bộ mặc định.
 - Để dùng LLM thật, đặt biến môi trường trước khi khởi chạy ứng dụng: `LLM_PROVIDER=ollama` hoặc `LLM_PROVIDER=openai`, cùng model, URL và API key tương ứng. Chế độ mặc định `LLM_PROVIDER=demo` không gọi LLM; câu trả lời chỉ trích xuất thông tin liên quan.
 - Khi có yêu cầu AI, hệ thống tự đồng bộ vector sản phẩm và tài liệu. Có thể chạy thủ công:
 
