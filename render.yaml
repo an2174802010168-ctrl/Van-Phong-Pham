@@ -1,0 +1,28 @@
+databases:
+  - name: flaskshop-db
+    plan: free
+
+services:
+  - type: web
+    name: flaskshop
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && flask seed
+    startCommand: gunicorn shop:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: flaskshop-db
+          property: connectionString
+      - key: LLM_PROVIDER
+        value: demo
+      - key: EMBED_PROVIDER
+        value: local
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false

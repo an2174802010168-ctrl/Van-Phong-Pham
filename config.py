@@ -5,11 +5,17 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 RATE_API_URL = os.environ.get('RATE_API_URL') or 'https://open.er-api.com/v6/latest/USD'
 
+# Render trả về 'postgres://...', SQLAlchemy 2.0 chỉ nhận 'postgresql://...'
+_db_url = os.environ.get('DATABASE_URL')
+if _db_url and _db_url.startswith('postgres://'):
+    _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+
+
 class Config:
     RATE_API_URL = RATE_API_URL
     SHOP_NAME = 'FlaskShop'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-hay-doi-khi-trien-khai'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = _db_url or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
 
     PRODUCTS_PER_PAGE = 8
